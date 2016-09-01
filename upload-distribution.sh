@@ -16,7 +16,7 @@ fi
 
 echo "#####################################################"
 echo "# Uploading Hibernate $PROJECT $RELEASE_VERSION on"
-echo "# $DIST_PARENT"
+echo "# SourceForge: $DIST_PARENT_DIR"
 echo "#####################################################"
 echo "Workspace: $WORKSPACE"
 
