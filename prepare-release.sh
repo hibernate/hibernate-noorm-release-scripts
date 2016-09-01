@@ -17,12 +17,17 @@ fi
 
 echo "Preparing the release ..."
 
-pushd $WORKSPACE/hibernate-noorm-release-scripts/
+pushd $WORKSPACE/hibernate-noorm-release-scripts
 bundle install
-./pre-release.rb -p $PROJECT -v $RELEASE_VERSION -r $WORKSPACE/README.md -c $WORKSPACE/changelog.txt
-bash validate-release.sh $PROJECT $RELEASE_VERSION
-bash update-version.sh $PROJECT $RELEASE_VERSION
-bash create-tag.sh $PROJECT $RELEASE_VERSION
+popd
+
+pushd $WORKSPACE
+
+./hibernate-noorm-release-scripts/pre-release.rb -p $PROJECT -v $RELEASE_VERSION -r $WORKSPACE/README.md -c $WORKSPACE/changelog.txt
+bash hibernate-noorm-release-scripts/validate-release.sh $PROJECT $RELEASE_VERSION
+bash hibernate-noorm-release-scripts/update-version.sh $PROJECT $RELEASE_VERSION
+bash hibernate-noorm-release-scripts/create-tag.sh $PROJECT $RELEASE_VERSION
+
 popd
 
 echo "Release ready: version is updated to $RELEASE_VERSION"

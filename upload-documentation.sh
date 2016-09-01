@@ -3,6 +3,7 @@
 PROJECT=$1
 RELEASE_VERSION=$2
 VERSION_FAMILY=$3
+WORKSPACE=${WORKSPACE:-'.'}
 
 if [ -z "$PROJECT" ]; then
 	echo "ERROR: Project not supplied"
@@ -17,6 +18,7 @@ if [ -z "$VERSION_FAMILY" ]; then
 	exit 1
 fi
 
+pushd ${WORKSPACE}
 
 unzip distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.zip -d distribution/target/unpacked
 DOCUMENTATION_DIRECTORY=distribution/target/unpacked/hibernate-${PROJECT}-${RELEASE_VERSION}/docs
@@ -81,3 +83,5 @@ EOF
 	fi
 	rm -f ${PROJECT}.json
 fi
+
+popd

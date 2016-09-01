@@ -20,6 +20,8 @@ echo "# SourceForge: $DIST_PARENT_DIR"
 echo "#####################################################"
 echo "Workspace: $WORKSPACE"
 
+pushd $WORKSPACE
+
 ((echo mkdir $DIST_PARENT_DIR/$RELEASE_VERSION; echo quit) | sftp -b - frs.sourceforge.net) || echo "Directory already exists. Skipping creation."
 scp README.md frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
 scp changelog.txt frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
@@ -30,5 +32,7 @@ MODULE=modules/target/hibernate-$PROJECT-modules-$RELEASE_VERSION-wildfly-10-dis
 if [ -f $MODULE ]; then
 	scp $MODULE frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
 fi
+
+popd
 
 echo "Distribution uploaded to SourceForge"

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 PROJECT=$1
+WORKSPACE=${WORKSPACE:-'.'}
+
+pushd ${WORKSPACE}
 
 if [ -z "$PROJECT" ]; then
 	echo "ERROR: Project not supplied"
@@ -14,3 +17,5 @@ else
 fi
 
 mvn -Pdocbook,dist clean deploy -s $HOME/.m2/settings-search-release.xml -DskipTests=true -Dcheckstyle.skip=true -DdeployAtEnd=true -Dmaven.compiler.useIncrementalCompilation=false $ADDITIONAL_OPTIONS
+
+popd

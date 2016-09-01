@@ -6,6 +6,8 @@ WORKSPACE=${WORKSPACE:-'.'}
 CHANGELOG=$WORKSPACE/changelog.txt
 README=$WORKSPACE/README.md
 
+pushd ${WORKSPACE}
+
 if [ -z "$PROJECT" ]; then
 	echo "ERROR: Project not supplied"
 	exit 1
@@ -40,3 +42,5 @@ else
         echo "ERROR: $CHANGELOG has not been updated"
         exit 1
 fi
+
+popd

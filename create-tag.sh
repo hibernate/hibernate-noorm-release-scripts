@@ -2,6 +2,9 @@
 
 PROJECT=$1
 RELEASE_VERSION=$2
+WORKSPACE=${WORKSPACE:-'.'}
+
+pushd ${WORKSPACE}
 
 if [ -z "$PROJECT" ]; then
 	echo "ERROR: Project not supplied"
@@ -14,3 +17,5 @@ fi
 
 git commit -a -m "[Jenkins release job] Preparing release $RELEASE_VERSION"
 git tag $RELEASE_VERSION
+
+popd
