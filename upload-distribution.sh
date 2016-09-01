@@ -20,15 +20,15 @@ echo "# SourceForge: $DIST_PARENT_DIR"
 echo "#####################################################"
 echo "Workspace: $WORKSPACE"
 
-(echo mkdir $DIST_PARENT_DIR/$RELEASE_VERSION; echo quit) | sftp -b - frs.sourceforge.net
-scp README.md frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION
-scp changelog.txt frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION
-scp distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.zip frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION
-scp distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.tar.gz frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION
+((echo mkdir $DIST_PARENT_DIR/$RELEASE_VERSION; echo quit) | sftp -b - frs.sourceforge.net) || echo "Directory already exists. Skipping creation."
+scp README.md frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
+scp changelog.txt frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
+scp distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.zip frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
+scp distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.tar.gz frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
 
 MODULE=modules/target/hibernate-$PROJECT-modules-$RELEASE_VERSION-wildfly-10-dist.zip
 if [ -f $MODULE ]; then
-	scp $MODULE frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION
+	scp $MODULE frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
 fi
 
 echo "Distribution uploaded to SourceForge"
