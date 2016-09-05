@@ -231,7 +231,7 @@ end
 def update_readme(readme_file_name, release_version)
   readme = File.read(readme_file_name)
   updated_readme = readme.gsub(/^\*?Version: .*\*?$/, "*Version: #{release_version} - #{$now.strftime("%d-%m-%Y")}*")
-  updated_readme = updated_readme.gsub(/(<dependency>\s*<groupId>org\.hibernate[^\/]*<\/groupId>\s*<artifactId>hibernate-validator[^\/]*<\/artifactId>\s*<version>)[^\/]+(<\/version>)/m, "\\1#{release_version}\\2")
+  updated_readme = updated_readme.gsub(/(<dependency>\s*<groupId>org\.hibernate[^\/]*<\/groupId>\s*<artifactId>hibernate[^\/]*<\/artifactId>\s*<version>)[^\/]+(<\/version>)/m, "\\1#{release_version}\\2")
 
   # To write changes to the file, use:
   File.open(readme_file_name, "w") {|file| file.puts updated_readme }
