@@ -73,10 +73,12 @@ end
 ########################################################################################################################
 # Project specific configuration
 $project=Choice.choices[:project]
+$skip_components_in_log = false
 if $project == "validator"
   $jira_key='HV'
 elsif $project == "search"
   $jira_key='HSEARCH'
+  $skip_components_in_log = true
 elsif $project == "ogm"
   $jira_key='OGM'
 end
@@ -156,7 +158,7 @@ end
 #    * PROJECT-<key> - <component>  - <summary>
 #    ...
 #
-def create_changelog_update(release_version)
+def create_changelog_update(release_version, skip_components)
   interpolated_url = eval '"' + $jira_issues_url + '"'
   jira_issues = get_json interpolated_url
   processed_issues = process_issues(jira_issues)
@@ -175,7 +177,9 @@ def create_changelog_update(release_version)
 
     # issue key
     change_log_update << '    * ' << issue['key'] << ' '
-    change_log_update << '- ' << issue['components'].ljust(max_component_length) << ' - '
+    unless skip_components
+      change_log_update << '- ' << issue['components'].ljust(max_component_length) << ' - '
+    end
     change_log_update << issue['summary'] << "\n"
   end
 
@@ -279,7 +283,7 @@ change_log_file_name = Choice.choices[:update_changelog]
 if !change_log_file_name.nil? and !change_log_file_name.empty?
   abort "ERROR: #{change_log_file_name} is not a valid file" unless File.exist?(change_log_file_name)
 
-  change_log_update = create_changelog_update release_version
+  change_log_update = create_changelog_update(release_version, $skip_components_in_log)
   insert_lines(change_log_file_name, 4, change_log_update)
   git_commit(change_log_file_name, "[Jenkins release job] changelog.txt updated by release build #{release_version}")
 end
