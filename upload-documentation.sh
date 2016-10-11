@@ -78,7 +78,7 @@ if [[ $RELEASE_VERSION =~ .*\.Final ]]; then
 		sftp filemgmt.jboss.org -b <<EOF
 cd docs_htdocs/hibernate/stable
 rm ${PROJECT}
-ln -s ../${PROJECT}/$VERSION_FAMILY
+ln -s ../${PROJECT}/$VERSION_FAMILY ${PROJECT}
 EOF
 	fi
 	rm -f ${PROJECT}.json
