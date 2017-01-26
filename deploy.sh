@@ -16,6 +16,6 @@ else
 	ADDITIONAL_OPTIONS=""
 fi
 
-mvn -Pdocbook,documentation-pdf,dist,perf clean deploy -s $HOME/.m2/settings-search-release.xml -DskipTests=true -Dcheckstyle.skip=true -DperformRelease=true -Dmaven.compiler.useIncrementalCompilation=false $ADDITIONAL_OPTIONS
+mvn -Pdocbook,documentation-pdf,dist,perf,relocation clean deploy -s $HOME/.m2/settings-search-release.xml -DskipTests=true -Dcheckstyle.skip=true -DperformRelease=true -Dmaven.compiler.useIncrementalCompilation=false $ADDITIONAL_OPTIONS
 
 popd
