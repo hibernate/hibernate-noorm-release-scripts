@@ -2,6 +2,7 @@
 
 PROJECT=$1
 RELEASE_VERSION=$2
+INHERITED_VERSION=$3
 WORKSPACE=${WORKSPACE:-'.'}
 
 if [ -z "$PROJECT" ]; then
@@ -25,7 +26,7 @@ pushd $WORKSPACE
 
 ./hibernate-noorm-release-scripts/pre-release.rb -p $PROJECT -v $RELEASE_VERSION -r $WORKSPACE/README.md -c $WORKSPACE/changelog.txt
 bash hibernate-noorm-release-scripts/validate-release.sh $PROJECT $RELEASE_VERSION
-bash hibernate-noorm-release-scripts/update-version.sh $PROJECT $RELEASE_VERSION
+bash hibernate-noorm-release-scripts/update-version.sh $PROJECT $RELEASE_VERSION $INHERITED_VERSION
 bash hibernate-noorm-release-scripts/create-tag.sh $PROJECT $RELEASE_VERSION
 
 popd
