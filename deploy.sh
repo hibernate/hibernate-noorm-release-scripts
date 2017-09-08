@@ -11,7 +11,7 @@ if [ -z "$PROJECT" ]; then
 fi
 
 if [ "$PROJECT" == "ogm" ]; then
-	ADDITIONAL_OPTIONS="-DmongodbProvider=external"
+	ADDITIONAL_OPTIONS="-DmongodbProvider=external -DskipITs"
 else
 	ADDITIONAL_OPTIONS=""
 fi
