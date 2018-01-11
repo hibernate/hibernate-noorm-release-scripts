@@ -1,1 +1,28 @@
+# Typically *NIX text editors, by default, append '~' to files on saving to make backups
+*~
+
+# IntelliJ specific files/directories
+.idea
+*.ipr
+*.iws
+*.iml
+atlassian-ide-plugin.xml
+
+# Eclipse specific files/directories
+.classpath
 .project
+.settings
+.externalToolBuilders
+.factorypath
+
+# NetBeans specific files/directories
+.nbattrs
+
+# Sublime
+*.sublime-*
+
+# Miscellaneous
+*.log
+.clover
+.DS_Store
+
