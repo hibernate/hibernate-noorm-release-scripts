@@ -2,7 +2,7 @@
 
 PROJECT=$1
 RELEASE_VERSION=$2
-DIST_PARENT_DIR=${3:-"/home/frs/project/hibernate/hibernate-$PROJECT"}
+REMOTE_DIST_PARENT_DIR=${3:-"/home/frs/project/hibernate/hibernate-$PROJECT"}
 WORKSPACE=${WORKSPACE:-'.'}
 
 if [ -z "$PROJECT" ]; then
@@ -16,15 +16,15 @@ fi
 
 echo "#####################################################"
 echo "# Uploading Hibernate $PROJECT $RELEASE_VERSION on"
-echo "# SourceForge: $DIST_PARENT_DIR"
+echo "# SourceForge: $REMOTE_DIST_PARENT_DIR"
 echo "#####################################################"
 echo "Workspace: $WORKSPACE"
 
 pushd $WORKSPACE
 
-((echo mkdir $DIST_PARENT_DIR/$RELEASE_VERSION; echo quit) | sftp -b - frs.sourceforge.net) || echo "Directory already exists. Skipping creation."
+((echo mkdir $REMOTE_DIST_PARENT_DIR/$RELEASE_VERSION; echo quit) | sftp -b - frs.sourceforge.net) || echo "Directory already exists. Skipping creation."
 
-REMOTE_DIST_URL=frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
+REMOTE_DIST_URL=frs.sourceforge.net:$REMOTE_DIST_PARENT_DIR/$RELEASE_VERSION/
 
 scp README.md $REMOTE_DIST_URL
 scp changelog.txt $REMOTE_DIST_URL
