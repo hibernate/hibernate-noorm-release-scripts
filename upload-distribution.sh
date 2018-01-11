@@ -23,14 +23,17 @@ echo "Workspace: $WORKSPACE"
 pushd $WORKSPACE
 
 ((echo mkdir $DIST_PARENT_DIR/$RELEASE_VERSION; echo quit) | sftp -b - frs.sourceforge.net) || echo "Directory already exists. Skipping creation."
-scp README.md frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
-scp changelog.txt frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
-scp distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.zip frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
-scp distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.tar.gz frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
+
+REMOTE_DIST_URL=frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
+
+scp README.md $REMOTE_DIST_URL
+scp changelog.txt $REMOTE_DIST_URL
+scp distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.zip $REMOTE_DIST_URL
+scp distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.tar.gz $REMOTE_DIST_URL
 
 MODULE=modules/target/hibernate-$PROJECT-modules-$RELEASE_VERSION-wildfly-10-dist.zip
 if [ -f $MODULE ]; then
-	scp $MODULE frs.sourceforge.net:$DIST_PARENT_DIR/$RELEASE_VERSION/
+	scp $MODULE $REMOTE_DIST_URL
 fi
 
 popd
