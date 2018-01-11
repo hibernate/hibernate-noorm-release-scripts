@@ -20,7 +20,12 @@ fi
 
 pushd ${WORKSPACE}
 
-unzip distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.zip -d distribution/target/unpacked
+DIST=distribution/target/dist/hibernate-$PROJECT-$RELEASE_VERSION-dist.zip
+if [ ! -f $DIST ]; then
+	# Legacy layout; see upload-distribution.sh
+	DIST=distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.zip
+fi
+unzip $DIST -d distribution/target/unpacked
 DOCUMENTATION_DIRECTORY=distribution/target/unpacked/hibernate-${PROJECT}-${RELEASE_VERSION}/docs
 
 # Add various metadata to the header
