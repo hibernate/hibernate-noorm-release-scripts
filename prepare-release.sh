@@ -24,6 +24,7 @@ popd
 
 pushd $WORKSPACE
 
+bash hibernate-noorm-release-scripts/check-sourceforge-availability.sh
 ./hibernate-noorm-release-scripts/pre-release.rb -p $PROJECT -v $RELEASE_VERSION -r $WORKSPACE/README.md -c $WORKSPACE/changelog.txt
 bash hibernate-noorm-release-scripts/validate-release.sh $PROJECT $RELEASE_VERSION
 bash hibernate-noorm-release-scripts/update-version.sh $PROJECT $RELEASE_VERSION $INHERITED_VERSION
