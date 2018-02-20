@@ -34,7 +34,7 @@ DIST_DIR=distribution/target/dist
 if [ -d $DIST_DIR ]; then
 	# Cd to the dist directory to prevent scp from uploading a "dist" directory
 	pushd $DIST_DIR
-	scp -r . $REMOTE_DIST_URL
+	scp -v -r . $REMOTE_DIST_URL
 	popd
 fi
 
