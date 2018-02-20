@@ -26,8 +26,8 @@ pushd $WORKSPACE
 
 REMOTE_DIST_URL=frs.sourceforge.net:$REMOTE_DIST_PARENT_DIR/$RELEASE_VERSION/
 
-scp README.md $REMOTE_DIST_URL
-scp changelog.txt $REMOTE_DIST_URL
+scp -vv README.md $REMOTE_DIST_URL
+scp -vv changelog.txt $REMOTE_DIST_URL
 
 # Recursive upload of the dist directory (whose content is project-specific)
 DIST_DIR=distribution/target/dist
