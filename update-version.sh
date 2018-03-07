@@ -19,12 +19,12 @@ fi
 
 pushd $WORKSPACE
 if [ -f bom/pom.xml ]; then
-	mvn -Prelocation clean versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -f bom/pom.xml
+	./mvnw -Prelocation clean versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -f bom/pom.xml
 elif [ -z "$VERSION_INHERITED" ]; then
-	mvn -Prelocation clean versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
+	./mvnw -Prelocation clean versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
 else
     # Version inherited from parent
-    mvn -Prelocation versions:update-parent -DparentVersion="[1.0, $NEW_VERSION]" -DgenerateBackupPoms=false -DallowSnapshots=true
-    mvn -Prelocation -N versions:update-child-modules -DgenerateBackupPoms=false
+    ./mvnw -Prelocation versions:update-parent -DparentVersion="[1.0, $NEW_VERSION]" -DgenerateBackupPoms=false -DallowSnapshots=true
+    ./mvnw -Prelocation -N versions:update-child-modules -DgenerateBackupPoms=false
 fi
 popd
