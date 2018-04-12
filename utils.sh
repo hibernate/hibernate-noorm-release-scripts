@@ -19,8 +19,9 @@ function try_multiple_times() {
        if "${@}"
        then
           return 0
+       else
+          ERR=$?
        fi
-       ERR=$?
        COUNT=$(( COUNT + 1 ))
     done
     echo "Failed to execute \"${@}\" after $COUNT attempts. Aborting."
