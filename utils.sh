@@ -14,13 +14,18 @@ function try_multiple_times() {
        then
           echo "Retrying \"${@}\" (attempt #$(( COUNT + 1 )))..."
        fi
-       "${@}"
-       ERR=$?
-       if [ $ERR -eq 0 ]
+
+       # Execute the command in an IF, just in case "errexit" is enabled
+       if "${@}"
        then
-          break
+          return 0
        fi
+       ERR=$?
        COUNT=$(( COUNT + 1 ))
     done
+    echo "Failed to execute \"${@}\" after $COUNT attempts. Aborting."
+    # Simulate a failing command, just in case "errexit" is enabled, to trigger an exit as appropriate
+    false
+    # Otherwise return the failing command's status code
     return $ERR
 }
