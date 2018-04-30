@@ -31,10 +31,10 @@ cat >$CREATE_DIR_SFTP_SCRIPT <<EOF
 mkdir $REMOTE_DIST_PARENT_DIR/$RELEASE_VERSION
 quit
 EOF
-try_multiple_times sftp -b $CREATE_DIR_SFTP_SCRIPT frs.sourceforge.net || echo "Directory already exists. Skipping creation."
+try_multiple_times sftp -b $CREATE_DIR_SFTP_SCRIPT hibernate-ci@frs.sourceforge.net || echo "Directory already exists. Skipping creation."
 rm $CREATE_DIR_SFTP_SCRIPT
 
-REMOTE_DIST_URL=frs.sourceforge.net:$REMOTE_DIST_PARENT_DIR/$RELEASE_VERSION/
+REMOTE_DIST_URL=hibernate-ci@frs.sourceforge.net:$REMOTE_DIST_PARENT_DIR/$RELEASE_VERSION/
 
 try_multiple_times scp -v README.md $REMOTE_DIST_URL
 try_multiple_times scp -v changelog.txt $REMOTE_DIST_URL
