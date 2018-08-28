@@ -237,8 +237,13 @@ def update_readme(readme_file_name, release_version)
   updated_readme = readme.gsub(/^\*?Version: .*\*?$/, "*Version: #{release_version} - #{$now.strftime("%d-%m-%Y")}*")
   updated_readme = updated_readme.gsub(/(<dependency>\s*<groupId>org\.hibernate[^\/]*<\/groupId>\s*<artifactId>hibernate[^\/]*<\/artifactId>\s*<version>)[^\/]+(<\/version>)/m, "\\1#{release_version}\\2")
 
-  # To write changes to the file, use:
-  File.open(readme_file_name, "w") {|file| file.puts updated_readme }
+  if readme != updated_readme
+    # To write changes to the file, use:
+    File.open(readme_file_name, "w") {|file| file.puts updated_readme }
+    return true
+  else
+    return false
+  end
 end
 
 #######################################################################################################################
@@ -275,8 +280,9 @@ end
 readme_file_name = Choice.choices[:update_readme]
 if !readme_file_name.nil? and !readme_file_name.empty?
   abort "ERROR: #{readme_file_name} is not a valid file" unless File.exist?(readme_file_name)
-  update_readme(readme_file_name, release_version)
-  git_commit(readme_file_name, "[Jenkins release job] README.md updated by release build #{release_version}")
+  if update_readme(readme_file_name, release_version)
+    git_commit(readme_file_name, "[Jenkins release job] README.md updated by release build #{release_version}")
+  end
 end
 
 change_log_file_name = Choice.choices[:update_changelog]
