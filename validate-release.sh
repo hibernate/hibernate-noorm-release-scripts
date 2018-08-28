@@ -27,12 +27,16 @@ else
 	echo "SUCCESS: tag '$RELEASE_VERSION' does not exist"
 fi
 
-if grep -q "$RELEASE_VERSION" $README ;
+# Only check README updates if it's actually possible that it contains things to update
+if grep -Eq "^\*?Version: .*\*?$|<version>" $README
 then
-	echo "SUCCESS: $README looks updated"
-else
-	echo "ERROR: $README has not been updated"
-	exit 1
+	if grep -q "$RELEASE_VERSION" $README
+	then
+		echo "SUCCESS: $README looks updated"
+	else
+		echo "ERROR: $README has not been updated"
+		exit 1
+	fi
 fi
 
 if grep -q "$RELEASE_VERSION" $CHANGELOG ;
