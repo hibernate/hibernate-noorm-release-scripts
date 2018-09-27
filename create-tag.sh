@@ -16,6 +16,6 @@ if [ -z "$RELEASE_VERSION" ]; then
 fi
 
 git commit -a -m "[Jenkins release job] Preparing release $RELEASE_VERSION"
-git tag $RELEASE_VERSION
+git tag -a -m "Release $RELEASE_VERSION" "$RELEASE_VERSION"
 
 popd
