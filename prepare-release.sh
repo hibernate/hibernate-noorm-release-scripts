@@ -24,7 +24,7 @@ popd
 
 pushd $WORKSPACE
 
-mvn -N io.takari:maven:wrapper -Dmaven=3.5.2
+mvn -N io.takari:maven:wrapper -Dmaven=3.5.2 -s /home/jenkins/.m2/settings-search-release.xml
 
 bash hibernate-noorm-release-scripts/check-sourceforge-availability.sh
 ./hibernate-noorm-release-scripts/pre-release.rb -p $PROJECT -v $RELEASE_VERSION -r $WORKSPACE/README.md -c $WORKSPACE/changelog.txt
