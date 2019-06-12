@@ -5,6 +5,7 @@ NEW_VERSION=$2
 # If set, Project version is inherited from parent (maven requires a different command)
 VERSION_INHERITED=$3
 WORKSPACE=${WORKSPACE:-'.'}
+SETTINGS_XML=${SETTINGS_XML:-$HOME'/.m2/settings-search-release.xml'}
 
 if [ -z "$PROJECT" ]; then
 	echo "ERROR: Project not supplied"
@@ -19,12 +20,12 @@ fi
 
 pushd $WORKSPACE
 if [ -f bom/pom.xml ]; then
-	./mvnw -Prelocation clean versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -f bom/pom.xml
+	./mvnw -s $SETTINGS_XML -Prelocation clean versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -f bom/pom.xml
 elif [ -z "$VERSION_INHERITED" ]; then
-	./mvnw -Prelocation clean versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
+	./mvnw -s $SETTINGS_XML -Prelocation clean versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false
 else
     # Version inherited from parent
-    ./mvnw -Prelocation versions:update-parent -DparentVersion="[1.0, $NEW_VERSION]" -DgenerateBackupPoms=false -DallowSnapshots=true
-    ./mvnw -Prelocation -N versions:update-child-modules -DgenerateBackupPoms=false
+    ./mvnw -s $SETTINGS_XML -Prelocation versions:update-parent -DparentVersion="[1.0, $NEW_VERSION]" -DgenerateBackupPoms=false -DallowSnapshots=true
+    ./mvnw -s $SETTINGS_XML -Prelocation -N versions:update-child-modules -DgenerateBackupPoms=false
 fi
 popd

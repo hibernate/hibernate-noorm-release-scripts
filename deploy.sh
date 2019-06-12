@@ -2,6 +2,7 @@
 
 PROJECT=$1
 WORKSPACE=${WORKSPACE:-'.'}
+SETTINGS_XML=${SETTINGS_XML:-$HOME'/.m2/settings-search-release.xml'}
 
 pushd ${WORKSPACE}
 
@@ -16,6 +17,6 @@ else
 	ADDITIONAL_OPTIONS=""
 fi
 
-./mvnw -Pdocbook,documentation-pdf,dist,perf,relocation,release clean deploy -s $HOME/.m2/settings-search-release.xml -DskipTests=true -Dcheckstyle.skip=true -DperformRelease=true -Dmaven.compiler.useIncrementalCompilation=false $ADDITIONAL_OPTIONS
+./mvnw -s $SETTINGS_XML -Pdocbook,documentation-pdf,dist,perf,relocation,release clean deploy -s $HOME/.m2/settings-search-release.xml -DskipTests=true -Dcheckstyle.skip=true -DperformRelease=true -Dmaven.compiler.useIncrementalCompilation=false $ADDITIONAL_OPTIONS
 
 popd
