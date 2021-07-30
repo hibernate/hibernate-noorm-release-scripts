@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SCRIPTS_DIR="$(readlink -f ${BASH_SOURCE[0]} | xargs dirname)"
+
 PROJECT=$1
 WORKSPACE=${WORKSPACE:-'.'}
 
@@ -16,7 +18,7 @@ else
 	ADDITIONAL_OPTIONS=""
 fi
 
-source $WORKSPACE/hibernate-noorm-release-scripts/mvn-setup.sh
+source "$SCRIPTS_DIR/mvn-setup.sh"
 
 ./mvnw -Pdocbook,documentation-pdf,dist,perf,relocation,release clean deploy -DskipTests=true -Dcheckstyle.skip=true -DperformRelease=true -Dmaven.compiler.useIncrementalCompilation=false $ADDITIONAL_OPTIONS
 

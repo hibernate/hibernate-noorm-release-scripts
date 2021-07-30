@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# See utils.sh
-source $(readlink -f ${BASH_SOURCE[0]} | xargs dirname)/utils.sh
+SCRIPTS_DIR="$(readlink -f ${BASH_SOURCE[0]} | xargs dirname)"
+
+source "$SCRIPTS_DIR/utils.sh"
 
 PROJECT=$1
 RELEASE_VERSION=$2

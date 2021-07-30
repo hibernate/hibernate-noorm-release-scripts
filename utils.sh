@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# To be sourced from other scripts. Tip: use the following line to source it independently from the PWD,
+# To be sourced from other scripts. Tip: use the following lines to source it independently from the PWD,
 # provided your script is in the same directory as this one:
-#     source $(readlink -f ${BASH_SOURCE[0]} | xargs dirname)/utils.sh
+#     SCRIPTS_DIR="$(readlink -f ${BASH_SOURCE[0]} | xargs dirname)"
+#     source "$SCRIPTS_DIR/utils.sh"
 
 # Temporary hack, because sourceforge currently rejects connections randomly
 function try_multiple_times() {

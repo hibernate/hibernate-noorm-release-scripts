@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SCRIPTS_DIR="$(readlink -f ${BASH_SOURCE[0]} | xargs dirname)"
+
 PROJECT=$1
 NEW_VERSION=$2
 # If set, Project version is inherited from parent (maven requires a different command)
@@ -19,7 +21,7 @@ fi
 
 pushd $WORKSPACE
 
-source $WORKSPACE/hibernate-noorm-release-scripts/mvn-setup.sh
+source "$SCRIPTS_DIR/mvn-setup.sh"
 
 if [ -f bom/pom.xml ]; then
 	./mvnw -Prelocation clean versions:set -DnewVersion=$NEW_VERSION -DgenerateBackupPoms=false -f bom/pom.xml

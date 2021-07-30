@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+SCRIPTS_DIR="$(readlink -f ${BASH_SOURCE[0]} | xargs dirname)"
+
 PROJECT=$1
 RELEASE_VERSION=$2
 INHERITED_VERSION=$3
@@ -18,17 +20,17 @@ fi
 
 echo "Preparing the release ..."
 
-pushd $WORKSPACE/hibernate-noorm-release-scripts
+pushd "$SCRIPTS_DIR"
 bundle install
 popd
 
 pushd $WORKSPACE
 
-bash hibernate-noorm-release-scripts/check-sourceforge-availability.sh
-./hibernate-noorm-release-scripts/pre-release.rb -p $PROJECT -v $RELEASE_VERSION -r $WORKSPACE/README.md -c $WORKSPACE/changelog.txt
-bash hibernate-noorm-release-scripts/validate-release.sh $PROJECT $RELEASE_VERSION
-bash hibernate-noorm-release-scripts/update-version.sh $PROJECT $RELEASE_VERSION $INHERITED_VERSION
-bash hibernate-noorm-release-scripts/create-tag.sh $PROJECT $RELEASE_VERSION
+bash "$SCRIPTS_DIR/check-sourceforge-availability.sh"
+"$SCRIPTS_DIR/pre-release.rb" -p $PROJECT -v $RELEASE_VERSION -r $WORKSPACE/README.md -c $WORKSPACE/changelog.txt
+bash "$SCRIPTS_DIR/validate-release.sh" $PROJECT $RELEASE_VERSION
+bash "$SCRIPTS_DIR/update-version.sh" $PROJECT $RELEASE_VERSION $INHERITED_VERSION
+bash "$SCRIPTS_DIR/create-tag.sh" $PROJECT $RELEASE_VERSION
 
 popd
 
