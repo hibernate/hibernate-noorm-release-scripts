@@ -20,11 +20,9 @@ fi
 
 echo "Preparing the release ..."
 
-if ! (( $RUNNING_IN_HIBERNATE_RELEASE_CONTAINER )); then
-  pushd "$SCRIPTS_DIR"
-  bundle install
-  popd
-fi
+pushd "$SCRIPTS_DIR"
+bundle install
+popd
 
 pushd $WORKSPACE
 
