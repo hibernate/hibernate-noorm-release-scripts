@@ -2,7 +2,6 @@
 
 PROJECT=$1
 WORKSPACE=${WORKSPACE:-'.'}
-SETTINGS_XML=${SETTINGS_XML:-$HOME'/.m2/settings-search-release.xml'}
 
 pushd ${WORKSPACE}
 
@@ -17,6 +16,8 @@ else
 	ADDITIONAL_OPTIONS=""
 fi
 
-./mvnw -Pdocbook,documentation-pdf,dist,perf,relocation,release clean deploy -s $SETTINGS_XML -DskipTests=true -Dcheckstyle.skip=true -DperformRelease=true -Dmaven.compiler.useIncrementalCompilation=false $ADDITIONAL_OPTIONS
+source $WORKSPACE/hibernate-noorm-release-scripts/mvn-setup.sh
+
+./mvnw -Pdocbook,documentation-pdf,dist,perf,relocation,release clean deploy -DskipTests=true -Dcheckstyle.skip=true -DperformRelease=true -Dmaven.compiler.useIncrementalCompilation=false $ADDITIONAL_OPTIONS
 
 popd
