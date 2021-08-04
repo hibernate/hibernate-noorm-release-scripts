@@ -23,7 +23,7 @@ echo "Preparing the release ..."
 pushd $WORKSPACE
 
 bash "$SCRIPTS_DIR/check-sourceforge-availability.sh"
-if [ "$PROJECT" = "search" ]; then
+if [ "$PROJECT" = "search" ] || [ "$PROJECT" = "validator" ] ; then
   # Simpler bash script to update the changelog.
   bash "$SCRIPTS_DIR/update-changelog.sh" $PROJECT $RELEASE_VERSION $WORKSPACE/changelog.txt
 else
