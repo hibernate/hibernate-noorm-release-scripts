@@ -24,8 +24,9 @@ pushd $WORKSPACE
 
 bash "$SCRIPTS_DIR/check-sourceforge-availability.sh"
 if [ "$PROJECT" = "search" ] || [ "$PROJECT" = "validator" ] ; then
-  # Simpler bash script to update the changelog.
-  bash "$SCRIPTS_DIR/update-changelog.sh" $PROJECT $RELEASE_VERSION $WORKSPACE/changelog.txt
+  # Simpler bash scripts to update the changelog and README.
+  bash "$SCRIPTS_DIR/update-readme.sh" $PROJECT $RELEASE_VERSION "$WORKSPACE/README.md"
+  bash "$SCRIPTS_DIR/update-changelog.sh" $PROJECT $RELEASE_VERSION "$WORKSPACE/changelog.txt"
 else
   # Legacy ruby script to update the changelog and README.
   pushd "$SCRIPTS_DIR"
