@@ -114,7 +114,6 @@ fi
 changelog_update_file="$(mktemp)"
 trap "rm -f $changelog_update_file" EXIT
 create_changelog_update > "$changelog_update_file"
-#TODO -i
-sed "3r$changelog_update_file" "$CHANGELOG"
-#git add "$CHANGELOG"
-#git commit -m "[Jenkins release job] changelog.txt updated by release build #{RELEASE_VERSION}")
+sed -i "3r$changelog_update_file" "$CHANGELOG"
+git add "$CHANGELOG"
+git commit -m "[Jenkins release job] changelog.txt updated by release build #{RELEASE_VERSION}")
