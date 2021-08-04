@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env -S bash -e
 # To be sourced from other scripts. Tip: use the following lines to source it independently from the PWD,
 # provided your script is in the same directory as this one:
 #     SCRIPTS_DIR="$(readlink -f ${BASH_SOURCE[0]} | xargs dirname)"

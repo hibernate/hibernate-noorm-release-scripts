@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env -S bash -e
 
 PROJECT=$1
 RELEASE_VERSION=$2
