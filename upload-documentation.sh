@@ -3,6 +3,7 @@
 PROJECT=$1
 RELEASE_VERSION=$2
 VERSION_FAMILY=$3
+DOCS_HIBERNATE_ORG_CLONE=$4
 WORKSPACE=${WORKSPACE:-'.'}
 
 if [ -z "$PROJECT" ]; then
@@ -17,6 +18,14 @@ if [ -z "$VERSION_FAMILY" ]; then
 	echo "ERROR: Version family argument not supplied"
 	exit 1
 fi
+if [ -z "$DOCS_HIBERNATE_ORG_CLONE" ]; then
+	echo "ERROR: Path to local clone of the docs.hibernate.org git repository not supplied"
+	exit 1
+fi
+if ! [ -d "$DOCS_HIBERNATE_ORG_CLONE/.git" ]; then
+	echo "ERROR: '$DOCS_HIBERNATE_ORG_CLONE' is not a git repository"
+	exit 1
+fi
 
 pushd ${WORKSPACE}
 
@@ -26,7 +35,7 @@ if [ ! -f $DIST ]; then
 	DIST=distribution/target/hibernate-$PROJECT-$RELEASE_VERSION-dist.zip
 fi
 unzip $DIST -d distribution/target/unpacked
-DOCUMENTATION_DIRECTORY=distribution/target/unpacked/hibernate-${PROJECT}-${RELEASE_VERSION}/docs
+DOCUMENTATION_DIRECTORY=$(readlink -e "distribution/target/unpacked/hibernate-${PROJECT}-${RELEASE_VERSION}/docs")
 
 # Add various metadata to the header
 
@@ -55,9 +64,15 @@ for file in $(find ${DOCUMENTATION_DIRECTORY}/reference/ -name \*.html); do
 	fi
 done
 
-# Push the documentation to the doc server
+# Move to local clone of git repo for docs.hibernate.org
+pushd "${DOCS_HIBERNATE_ORG_CLONE}"
+DOCS_RELEASE_DIR="${PROJECT}/${VERSION_FAMILY}"
 
-rsync -rzh --progress --delete --protocol=28 ${DOCUMENTATION_DIRECTORY}/ filemgmt.jboss.org:/docs_htdocs/hibernate/${PROJECT}/$VERSION_FAMILY
+# Copy documentation to the git repo for docs.hibernate.org
+rsync -av \
+	--delete \
+	"${DOCUMENTATION_DIRECTORY}/" "${DOCS_RELEASE_DIR}"
+git add -A . && git commit -m "Documentation for ${PROJECT} ${VERSION_FAMILY}"
 
 # If the release is the new stable one, we need to update the doc server (outdated content descriptor and /stable/ symlink)
 
@@ -66,32 +81,40 @@ function version_gt() {
 }
 
 if [[ $RELEASE_VERSION =~ .*\.Final ]]; then
-	wget -q http://docs.jboss.org/hibernate/_outdated-content/${PROJECT}.json -O ${PROJECT}.json
-	if [ ! -s ${PROJECT}.json ]; then
-		echo "Error downloading the ${PROJECT}.json descriptor. Exiting."
+	JSON_INFO=_outdated-content/${PROJECT}.json
+	if [ ! -s ${JSON_INFO} ]; then
+		echo "Cannot find the ${JSON_INFO} descriptor. Exiting."
 		exit 1
 	fi
-	CURRENT_STABLE_VERSION=$(cat ${PROJECT}.json | jq -r ".stable")
+	CURRENT_STABLE_VERSION=$(cat "${JSON_INFO}" | jq -r ".stable")
 
 	if [ "$CURRENT_STABLE_VERSION" != "$VERSION_FAMILY" ] && version_gt $VERSION_FAMILY $CURRENT_STABLE_VERSION; then
-		cat ${PROJECT}.json | jq ".stable = \"$VERSION_FAMILY\"" > ${PROJECT}-updated.json
-		if [ ! -s ${PROJECT}-updated.json ]; then
-			echo "Error updating the ${PROJECT}.json descriptor. Exiting."
+		# Update the JSON descriptor for use in javascript
+		# See "Add the outdated content Javascript at the bottom of the pages" above
+		JSON_INFO_UPDATED=_outdated-content/${PROJECT}-updated.json
+		cat "${JSON_INFO}" | jq ".stable = \"$VERSION_FAMILY\"" > "${JSON_INFO_UPDATED}"
+		if [ ! -s "${JSON_INFO_UPDATED}" ]; then
+			echo "Error updating the ${JSON_INFO} descriptor. Exiting."
 			exit 1
 		fi
-
-		scp ${PROJECT}-updated.json filemgmt.jboss.org:docs_htdocs/hibernate/_outdated-content/${PROJECT}.json
-		rm -f ${PROJECT}-updated.json
+		mv "${JSON_INFO_UPDATED}" "${JSON_INFO}"
 
 		# update the symlink of stable to the latest release
-		# don't indent the EOF!
-		sftp filemgmt.jboss.org -b <<EOF
-cd docs_htdocs/hibernate/stable
-rm ${PROJECT}
-ln -s ../${PROJECT}/$VERSION_FAMILY ${PROJECT}
-EOF
+		pushd stable
+		rm ${PROJECT}
+		ln -s ../${PROJECT}/$VERSION_FAMILY ${PROJECT}
+		popd
+
+		git add -A . && git commit -m "Set the latest stable for ${PROJECT} to ${VERSION_FAMILY}"
 	fi
-	rm -f ${PROJECT}.json
 fi
+
+# Push
+# We assume that:
+# - SSH config allows relying on the SSH agent for github.com ("IdentitiesOnly no")
+# - The SSH agent is already running with the appropriate SSH key already unlocked and available
+git push origin HEAD:main
+
+popd
 
 popd
