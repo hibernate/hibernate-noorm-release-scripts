@@ -3,7 +3,6 @@
 PROJECT=$1
 RELEASE_VERSION=$2
 VERSION_FAMILY=$3
-DOCS_HIBERNATE_ORG_CLONE=$4
 WORKSPACE=${WORKSPACE:-'.'}
 
 if [ -z "$PROJECT" ]; then
@@ -16,14 +15,6 @@ if [ -z "$RELEASE_VERSION" ]; then
 fi
 if [ -z "$VERSION_FAMILY" ]; then
 	echo "ERROR: Version family argument not supplied"
-	exit 1
-fi
-if [ -z "$DOCS_HIBERNATE_ORG_CLONE" ]; then
-	echo "ERROR: Path to local clone of the docs.hibernate.org git repository not supplied"
-	exit 1
-fi
-if ! [ -d "$DOCS_HIBERNATE_ORG_CLONE/.git" ]; then
-	echo "ERROR: '$DOCS_HIBERNATE_ORG_CLONE' is not a git repository"
 	exit 1
 fi
 
@@ -64,9 +55,20 @@ for file in $(find ${DOCUMENTATION_DIRECTORY}/reference/ -name \*.html); do
 	fi
 done
 
-# Move to local clone of git repo for docs.hibernate.org
+# Clone git repo for docs.hibernate.org
+DOCS_HIBERNATE_ORG_CLONE=$(mktemp -d --tmpdir 'docs-hibernate-org-XXXXXXXXXX')
+# Make sure to clean up when the script exits
+trap "rm -rf '${DOCS_HIBERNATE_ORG_CLONE}'" EXIT
 pushd "${DOCS_HIBERNATE_ORG_CLONE}"
+# Use a sparse checkout because the working dir can be huge (more than 6 GB)
+# while .git data is relatively small (about 300 MB)
+git clone --sparse --depth 1 git@github.com:hibernate/docs.hibernate.org.git .
 DOCS_RELEASE_DIR="${PROJECT}/${VERSION_FAMILY}"
+git sparse-checkout set "/stable" "/${DOCS_RELEASE_DIR}" "/_outdated-content"
+
+# Set up commit info
+git config user.name "Hibernate CI"
+git config user.email "ci@hibernate.org"
 
 # Copy documentation to the git repo for docs.hibernate.org
 rsync -av \
