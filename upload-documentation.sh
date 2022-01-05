@@ -74,7 +74,7 @@ git config user.email "ci@hibernate.org"
 rsync -av \
 	--delete \
 	"${DOCUMENTATION_DIRECTORY}/" "${DOCS_RELEASE_DIR}"
-git add -A . && git commit -m "Documentation for ${PROJECT} ${VERSION_FAMILY}"
+git add -A . && git commit -m "Documentation for ${PROJECT} ${RELEASE_VERSION}"
 
 # If the release is the new stable one, we need to update the doc server (outdated content descriptor and /stable/ symlink)
 
