@@ -114,6 +114,10 @@ fi
 # Cleanup on exit
 
 function cleanup() {
+  if [ -n "$IMPORTED_KEY" ]; then
+    echo "Deleting imported GPG private key..."
+    gpg --homedir="$RELEASE_GPG_HOMEDIR" --batch --yes --delete-secret-keys "$IMPORTED_KEY" || true
+  fi
   if [ -d "$RELEASE_GPG_HOMEDIR" ]; then
     echo "Cleaning up GPG homedir..."
     rm -rf "$RELEASE_GPG_HOMEDIR" || true
@@ -132,7 +136,11 @@ if [ -e "$RELEASE_GPG_HOMEDIR" ]; then
   exit 1
 fi
 mkdir -p -m 700 "$RELEASE_GPG_HOMEDIR"
-gpg --homedir="$RELEASE_GPG_HOMEDIR" --batch --import "$RELEASE_GPG_PRIVATE_KEY_PATH"
+IMPORTED_KEY="$(gpg --homedir="$RELEASE_GPG_HOMEDIR" --batch --import "$RELEASE_GPG_PRIVATE_KEY_PATH" 2>&1 | tee /dev/stderr | grep 'key.*imported' | sed -E 's/.*key ([^:]+):.*/\1/')"
+if [ -z "$IMPORTED_KEY" ]; then
+  echo "Failed to import GPG key"
+  exit 1
+fi
 
 bash -xe "$SCRIPTS_DIR/prepare-release.sh" "$PROJECT" "$RELEASE_VERSION"
 
