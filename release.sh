@@ -136,7 +136,7 @@ if [ -e "$RELEASE_GPG_HOMEDIR" ]; then
   exit 1
 fi
 mkdir -p -m 700 "$RELEASE_GPG_HOMEDIR"
-IMPORTED_KEY="$(gpg --homedir="$RELEASE_GPG_HOMEDIR" --batch --import "$RELEASE_GPG_PRIVATE_KEY_PATH" 2>&1 | tee /dev/stderr | grep 'key.*imported' | sed -E 's/.*key ([^:]+):.*/\1/')"
+IMPORTED_KEY="$(gpg --homedir="$RELEASE_GPG_HOMEDIR" --batch --import "$RELEASE_GPG_PRIVATE_KEY_PATH" 2>&1 | tee /dev/stderr | grep 'key.*: secret key imported' | sed -E 's/.*key ([^:]+):.*/\1/')"
 if [ -z "$IMPORTED_KEY" ]; then
   echo "Failed to import GPG key"
   exit 1
