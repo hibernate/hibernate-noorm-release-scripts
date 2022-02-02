@@ -22,6 +22,10 @@ echo "Preparing the release ..."
 
 pushd $WORKSPACE
 
+# Set up git so that we can create commits
+git config --local user.name "Hibernate CI"
+git config --local user.email "ci@hibernate.org"
+
 "$SCRIPTS_DIR/check-sourceforge-availability.sh"
 if [ "$PROJECT" = "search" ] || [ "$PROJECT" = "validator" ] ; then
   # Simpler bash scripts to update the changelog and README.
