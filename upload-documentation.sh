@@ -57,7 +57,7 @@ done
 
 # Push the documentation to the doc server
 
-rsync -rzh --progress --delete --protocol=28 ${DOCUMENTATION_DIRECTORY}/ filemgmt.jboss.org:/docs_htdocs/hibernate/${PROJECT}/$VERSION_FAMILY
+rsync -rzh --progress --delete ${DOCUMENTATION_DIRECTORY}/ filemgmt.jboss.org:/docs_htdocs/hibernate/${PROJECT}/$VERSION_FAMILY
 
 # If the release is the new stable one, we need to update the doc server (outdated content descriptor and /stable/ symlink)
 
