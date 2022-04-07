@@ -56,8 +56,8 @@ for file in $(find ${DOCUMENTATION_DIRECTORY}/reference/ -name \*.html); do
 done
 
 # Push the documentation to the doc server
-
-rsync -rzh --progress --delete ${DOCUMENTATION_DIRECTORY}/ filemgmt.jboss.org:/docs_htdocs/hibernate/${PROJECT}/$VERSION_FAMILY
+# Note we have to use filemgmt-prod-sync.jboss.org for rsync, not filemgmt.jboss.org or filemgmt-prod.jboss.org
+rsync -rzh --progress --delete ${DOCUMENTATION_DIRECTORY}/ filemgmt-prod-sync.jboss.org:/docs_htdocs/hibernate/${PROJECT}/$VERSION_FAMILY
 
 # If the release is the new stable one, we need to update the doc server (outdated content descriptor and /stable/ symlink)
 
