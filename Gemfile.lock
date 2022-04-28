@@ -2,7 +2,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     choice (0.2.0)
-    git (1.9.1)
+    git (1.11.0)
       rchardet (~> 1.8)
     json (2.5.1)
     json (2.5.1-java)
