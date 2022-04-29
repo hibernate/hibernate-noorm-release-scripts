@@ -27,17 +27,8 @@ git config --local user.name "Hibernate CI"
 git config --local user.email "ci@hibernate.org"
 
 "$SCRIPTS_DIR/check-sourceforge-availability.sh"
-if [ "$PROJECT" = "search" ] || [ "$PROJECT" = "validator" ] ; then
-  # Simpler bash scripts to update the changelog and README.
-  "$SCRIPTS_DIR/update-readme.sh" $PROJECT $RELEASE_VERSION "$WORKSPACE/README.md"
-  "$SCRIPTS_DIR/update-changelog.sh" $PROJECT $RELEASE_VERSION "$WORKSPACE/changelog.txt"
-else
-  # Legacy ruby script to update the changelog and README.
-  pushd "$SCRIPTS_DIR"
-  bundle install
-  popd
-  "$SCRIPTS_DIR/pre-release.rb" -p $PROJECT -v $RELEASE_VERSION -r $WORKSPACE/README.md -c $WORKSPACE/changelog.txt
-fi
+"$SCRIPTS_DIR/update-readme.sh" $PROJECT $RELEASE_VERSION "$WORKSPACE/README.md"
+"$SCRIPTS_DIR/update-changelog.sh" $PROJECT $RELEASE_VERSION "$WORKSPACE/changelog.txt"
 "$SCRIPTS_DIR/validate-release.sh" $PROJECT $RELEASE_VERSION
 "$SCRIPTS_DIR/update-version.sh" $PROJECT $RELEASE_VERSION $INHERITED_VERSION
 "$SCRIPTS_DIR/create-tag.sh" $PROJECT $RELEASE_VERSION
