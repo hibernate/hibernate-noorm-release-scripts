@@ -80,7 +80,10 @@ if [[ $RELEASE_VERSION =~ .*\.Final ]]; then
 			exit 1
 		fi
 
-		scp ${PROJECT}-updated.json filemgmt.jboss.org:docs_htdocs/hibernate/_outdated-content/${PROJECT}.json
+		# filemgmt-prod*.jboss.org don't allow scp, so we'll just rsync a single file...
+		# That's a bit overkill but at least it works.
+		# Note we have to use filemgmt-prod-sync.jboss.org for rsync, not filemgmt.jboss.org or filemgmt-prod.jboss.org
+		rsync -z --progress ${PROJECT}-updated.json filemgmt-prod-sync.jboss.org:/docs_htdocs/hibernate/_outdated-content/${PROJECT}.json
 		rm -f ${PROJECT}-updated.json
 
 		# update the symlink of stable to the latest release
