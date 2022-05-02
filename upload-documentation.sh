@@ -88,7 +88,7 @@ if [[ $RELEASE_VERSION =~ .*\.Final ]]; then
 
 		# update the symlink of stable to the latest release
 		# don't indent the EOF!
-		sftp filemgmt.jboss.org -b <<EOF
+		sftp filemgmt-prod.jboss.org -b <<EOF
 cd docs_htdocs/hibernate/stable
 rm ${PROJECT}
 ln -s ../${PROJECT}/$VERSION_FAMILY ${PROJECT}
