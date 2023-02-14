@@ -111,12 +111,30 @@ if [ -z "$RELEASE_GPG_PRIVATE_KEY_PATH" ]; then
 fi
 
 #--------------------------------------------
+# GPG
+
+function gpg_import() {
+	local privateKeyPath="$1"
+	shift
+	local keyId
+	keyId=$(gpg "${@}" --batch --import "$privateKeyPath" 2>&1 | tee /dev/stderr | grep 'key.*: secret key imported' | sed -E 's/.*key ([^:]+):.*/\1/')
+	# output the fingerprint of the imported key
+	gpg "${@}" --list-secret-keys --with-colon "$keyId" | sed -E '2!d;s/.*:([^:]+):$/\1/'
+}
+
+function gpg_delete() {
+	local fingerprint="$1"
+	shift
+	gpg "${@}" --batch --yes --delete-secret-keys "$fingerprint"
+}
+
+#--------------------------------------------
 # Cleanup on exit
 
 function cleanup() {
   if [ -n "$IMPORTED_KEY" ]; then
     echo "Deleting imported GPG private key..."
-    gpg --homedir="$RELEASE_GPG_HOMEDIR" --batch --yes --delete-secret-keys "$IMPORTED_KEY" || true
+    gpg_delete "$IMPORTED_KEY" || true
   fi
   if [ -d "$RELEASE_GPG_HOMEDIR" ]; then
     echo "Cleaning up GPG homedir..."
@@ -136,7 +154,8 @@ if [ -e "$RELEASE_GPG_HOMEDIR" ]; then
   exit 1
 fi
 mkdir -p -m 700 "$RELEASE_GPG_HOMEDIR"
-IMPORTED_KEY="$(gpg --homedir="$RELEASE_GPG_HOMEDIR" --batch --import "$RELEASE_GPG_PRIVATE_KEY_PATH" 2>&1 | tee /dev/stderr | grep 'key.*: secret key imported' | sed -E 's/.*key ([^:]+):.*/\1/')"
+export GNUPGHOME="$RELEASE_GPG_HOMEDIR"
+IMPORTED_KEY="$(gpg_import "$RELEASE_GPG_PRIVATE_KEY_PATH")"
 if [ -z "$IMPORTED_KEY" ]; then
   echo "Failed to import GPG key"
   exit 1
