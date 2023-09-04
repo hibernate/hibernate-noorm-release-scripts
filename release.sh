@@ -117,7 +117,7 @@ function gpg_import() {
 	local privateKeyPath="$1"
 	shift
 	local keyId
-	keyId=$(gpg "${@}" --batch --import "$privateKeyPath" 2>&1 | tee /dev/stderr | grep 'key.*: secret key imported' | sed -E 's/.*key ([^:]+):.*/\1/')
+	keyId=$(gpg "${@}" --batch --import "$privateKeyPath" 2>&1 | tee >(cat 1>&2) | grep 'key.*: secret key imported' | sed -E 's/.*key ([^:]+):.*/\1/')
 	# output the fingerprint of the imported key
 	gpg "${@}" --list-secret-keys --with-colon "$keyId" | sed -E '2!d;s/.*:([^:]+):$/\1/'
 }
